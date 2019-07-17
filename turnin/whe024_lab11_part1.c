@@ -63,28 +63,28 @@ unsigned char GetKeypadKey() {
     return('\0');
 }
 
-enum pauseButtonSM_States {pauseButton_wait, pauseButton_press, pauseButton_release};
+enum pressButtonSM_States {pressButton_wait, pressButton_press, pressButton_release};
 
-int pauseButtonSMTick(int state){
+int pressButtonSMTick(int state){
 	unsigned char press = GetKeypadKey();
 	switch(state){
-		case pauseButton_wait:
-			state = (press == '\0') ? pauseButton_wait: pauseButton_press;
+		case pressButton_wait:
+			state = (press == '\0') ? pressButton_wait: pressButton_press;
 			break;
-		case pauseButton_press:
-			state = pauseButton_release;
+		case pressButton_press:
+			state = pressButton_release;
 			break;
-		case pauseButton_release:
-			state = (press == '\0') ? pauseButton_wait: pauseButton_release;
+		case pressButton_release:
+			state = (press == '\0') ? pressButton_wait: pressButton_release;
 			break;
 		default:
-			state = pausebutton_wait;
+			state = pressButton_wait;
 			break;
 	}
 	switch(state){
-		case pauseButton_wait:
+		case pressButton_wait:
 			break;
-		case pauseButton_press:
+		case pressButton_press:
 			switch (press) {
                 		case '\0': 
 					PORTB = 0x1F; 
@@ -168,10 +168,10 @@ int main(void) {
     task *tasks[] = {&task1};
     const unsigned short numTasks = sizeof(tasks)/sizeof(task*);
 	
-    task1.state = pauseButton_wait;
+    task1.state = pressButton_wait;
     task1.period = 1;
     task1.elapsedTime = task1.period;
-    task1.TickFct = &pauseButtonSMTick;
+    task1.TickFct = &pressButtonSMTick;
     
     unsigned long int GCD = 1;
     TimerSet(1);
